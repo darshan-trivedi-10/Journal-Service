@@ -1,7 +1,7 @@
 import Query from "../utills/QueryHelper.js";
 
 class User {
-  async create(user) {
+  create = async (user) => {
     try {
       // { username: 'dbt10', password: 1235678, role: 1 }
       let query = `
@@ -14,9 +14,9 @@ class User {
       console.log(error);
       throw error;
     }
-  }
+  };
 
-  async findOne({ username }) {
+  findOne = async ({ username }) => {
     try {
       let query = `
         SELECT * FROM Users WHERE username = "${username}" LIMIT 1;
@@ -27,7 +27,7 @@ class User {
       console.log(error);
       throw error;
     }
-  }
+  };
 }
 
 export default User;

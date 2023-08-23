@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
 
 class Validator {
-  async authValidator(req, res, next) {
+  authValidator = async (req, res, next) => {
     try {
       const authSchema = Joi.object({
         username: Joi.string().required(),
@@ -31,7 +31,7 @@ class Validator {
         data: [],
       });
     }
-  }
+  };
 }
 
 export default Validator;

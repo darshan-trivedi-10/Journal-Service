@@ -1,17 +1,11 @@
 import Query from "../utills/QueryHelper.js";
 
 class Journal {
-  async create(journalData) {
+  create = async (journalData) => {};
 
-  }
+  update = async (id, type, data) => {};
 
-  async update(id, type, data) {
-
-  }
-
-  async delete(id) {
-
-  }
+  delete = async (id) => {};
 }
 
 export default Journal;

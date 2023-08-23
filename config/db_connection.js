@@ -1,11 +1,7 @@
 import mysql from "mysql";
+import { DB_CONFIG } from "./config.js";
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "JournalsFeeds",
-});
+const connection = mysql.createConnection(DB_CONFIG);
 
 function connectDb() {
   connection.connect(function (err, res) {

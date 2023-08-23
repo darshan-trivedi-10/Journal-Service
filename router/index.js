@@ -1,7 +1,8 @@
 import express from "express";
 
-import Validator from "../middleware/Validator.js";
-import { AuthController , JournalController} from "../controller/index.js";
+import { authMiddleware, Validator } from "../middleware/index.js";
+
+import { AuthController, JournalController } from "../controller/index.js";
 
 const router = express.Router();
 
@@ -14,8 +15,8 @@ var validator = new Validator();
 router.get("/auth", validator.authValidator, authController.Auth);
 
 // Journal Routes
-router.post("/journal/create", journalController.create);
-router.put("/journal/update", journalController.update);
-router.delete("/journal/delete", journalController.delete);
+router.post("/journal/create", authMiddleware, journalController.create);
+router.put("/journal/update", authMiddleware, journalController.update);
+router.delete("/journal/delete", authMiddleware, journalController.delete);
 
 export default router;

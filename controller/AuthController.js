@@ -7,10 +7,9 @@ import { verifyPassword, createToken } from "../utills/authUtills.js";
 class AuthController {
   constructor() {
     this.user = new User();
-    this.Auth = this.Auth.bind(this);
   }
 
-  async Auth(req, res) {
+  Auth = async (req, res) => {
     try {
       const { username, password, role } = req.body;
 
@@ -32,7 +31,7 @@ class AuthController {
       }
 
       const passwordMatch = verifyPassword(password, existingUser.password);
-      
+
       if (!passwordMatch) {
         // throw new Error("Incorrect credentials");
       }
@@ -51,16 +50,16 @@ class AuthController {
         err: error,
       });
     }
-  }
+  };
 
-  sendTokenResponse(res, user, message) {
+  sendTokenResponse = (res, user, message) => {
     const token = createToken(user);
     return res.status(StatusCodes.OK).json({
       success: true,
       data: { token },
       message,
     });
-  }
+  };
 }
 
 export default AuthController;

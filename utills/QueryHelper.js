@@ -1,8 +1,8 @@
 import { connection } from "../config/db_connection.js";
 
-function Query(query) {
-  return new Promise(function (resolve, reject) {
-    connection.query(query, function (err, res) {
+const Query = (query) => {
+  return new Promise((resolve, reject) => {
+    connection.query(query, (err, res) => {
       if (err) {
         reject(err);
       } else {
@@ -10,6 +10,6 @@ function Query(query) {
       }
     });
   });
-}
+};
 
 export default Query;

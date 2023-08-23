@@ -1,7 +1,5 @@
 import User from "./user.js";
 import Journal from "./journal.js";
-// Journal
+import Attachment from "./attachment.js";
 
-export {
-    User, Journal
-}
+export { User, Journal, Attachment };

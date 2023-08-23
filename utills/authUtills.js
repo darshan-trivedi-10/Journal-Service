@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { JWT_SCREATE_KEY } from '../config/config.js';
 
-
-function verifyPassword(userPassword, encryptedPassword){
+const verifyPassword = (userPassword, encryptedPassword) => {
     try {
         return bcrypt.compareSync(userPassword, encryptedPassword);
     } catch (error) {
@@ -11,12 +11,11 @@ function verifyPassword(userPassword, encryptedPassword){
     }
 }
 
-function createToken(user) {
+const createToken = (user) => {
     try {
-        const JWT_KEY = "ToddleApp@10"
         const result = jwt.sign({
-            id : user.user_id
-        }, JWT_KEY, { expiresIn: '1d' });
+            id: user.user_id
+        }, JWT_SCREATE_KEY, { expiresIn: '1d' });
         return result;
     } catch (error) {
         console.log(error);
@@ -26,5 +25,6 @@ function createToken(user) {
 }
 
 export {
-    verifyPassword, createToken
+    verifyPassword,
+    createToken
 }
