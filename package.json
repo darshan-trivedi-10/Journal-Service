@@ -1,0 +1,22 @@
+{
+  "name": "journal-service",
+  "version": "1.0.0",
+  "description": "journal feed service",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "microservice",
+    "assigment"
+  ],
+  "author": "ddt",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}
