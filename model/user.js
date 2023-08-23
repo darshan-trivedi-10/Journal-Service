@@ -21,7 +21,6 @@ class User {
       let query = `
         SELECT * FROM Users WHERE username = "${username}" LIMIT 1;
       `;
-      console.log(query);
       const data = await Query(query);
       return data[0];
     } catch (error) {
