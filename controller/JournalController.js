@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { v4 as uuidv4 } from "uuid";
 
 import upload from "../config/multerConfig.js";
 import { Journal, Attachment } from "../model/index.js";
@@ -25,6 +26,7 @@ class JournalController {
           error: err.message,
         });
       }
+      console.log("IDDD - ",req.user_id);
 
       let attachment_data,
         attachment_type = req.body.type;
@@ -34,26 +36,26 @@ class JournalController {
         attachment_data = req.file.filename;
       }
 
-      let response = this.attachment.create(attachment_type, attachment_data);
+      let attachment_id = uuidv4();
+      let response = await this.attachment.create(
+        attachment_id,
+        attachment_type,
+        attachment_data
+      );
       console.log(response);
-      return res.send("Check Terminal");
-      let attachmentId = 10;
 
       const journalData = {
         description: req.body.description,
         published_at: req.body.published_at,
-        user_id: req.body.id,
-        attachment_id: attachmentId,
+        user_id: req.user_id,
+        attachment_id: attachment_id,
       };
 
-      const fileName = req.file.filename;
-      const user = await userService.updateUser(req.body.id, {
-        profile: fileName,
-      });
+      const newJournal = await this.journal.create(journalData);
 
       return res.status(StatusCodes.OK).json({
         message: "Profile Images Uploaded Successfully",
-        data: { user },
+        data: newJournal,
         success: true,
       });
     });

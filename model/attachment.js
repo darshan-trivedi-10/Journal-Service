@@ -11,11 +11,11 @@ import Query from "../utills/QueryHelper.js";
 */
 
 class Attachment {
-  create = async (attachment_type, attachment_data) => {
+  create = async (attachment_id, attachment_type, attachment_data) => {
     try {
       const query = `
-        INSERT INTO Attachments (attachment_type, attachment_data)
-        VALUES (${attachment_data}, ${attachment_data});
+        INSERT INTO Attachments (attachment_id,attachment_type, attachment_data)
+        VALUES ("${attachment_id}","${attachment_type}", "${attachment_data}");
       `;
       const data = await Query(query);
       return data.affectedRows > 0;
