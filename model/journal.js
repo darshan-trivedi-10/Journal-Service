@@ -11,7 +11,7 @@ class Journal {
       console.log(query);
       const data = await Query(query);
       console.log(data);
-      return data.affectedRows > 0;
+      return await this.findById(journalData.journal_id);
     } catch (error) {
       console.log(error.message);
       throw error;
@@ -30,7 +30,7 @@ class Journal {
       }
 
       query += updateValues.join(", ");
-      query += ` WHERE journal_id = '${id}'`; 
+      query += ` WHERE journal_id = '${id}'`;
 
       console.log(query);
 
@@ -60,7 +60,7 @@ class Journal {
     }
   };
 
-  findByInd = async (journal_id) => {
+  findById = async (journal_id) => {
     try {
       const query = `
         SELECT * FROM Journals WHERE journal_id = "${journal_id}";
@@ -68,6 +68,19 @@ class Journal {
 
       const data = await Query(query);
 
+      return data;
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  };
+
+  teacherFeed = async (teacherId) => {
+    try {
+      let query = `
+        SELECT * FROM Journals WHERE user_id = "${teacherId}";
+      `
+      const data = await Query(query);
       return data;
     } catch (error) {
       console.log(error.message);

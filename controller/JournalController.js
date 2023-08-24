@@ -2,13 +2,19 @@ import { StatusCodes } from "http-status-codes";
 import { v4 as uuidv4 } from "uuid";
 
 import upload from "../config/multerConfig.js";
-import { Journal, Attachment, JournalStudentTag } from "../model/index.js";
+import {
+  Journal,
+  Attachment,
+  JournalStudentTag,
+  User,
+} from "../model/index.js";
 
 class JournalController {
   constructor() {
     this.journal = new Journal();
     this.attachment = new Attachment();
     this.journalStudentTag = new JournalStudentTag();
+    this.user = new User();
   }
 
   create = async (req, res) => {
@@ -22,6 +28,15 @@ class JournalController {
             data: {},
             success: false,
             error: err.message,
+          });
+        }
+
+        let teacherData = await this.user.findById(req.user_id);
+        if (teacherData.role == "0") {
+          return res.status(StatusCodes.FORBIDDEN).json({
+            message: "You do not have permission to create the journal",
+            data: {},
+            success: false,
           });
         }
 
@@ -56,6 +71,7 @@ class JournalController {
           journal_id,
           taggedStudent
         );
+        
 
         return res.status(StatusCodes.OK).json({
           message: "Journal Created Successfully",
@@ -78,7 +94,7 @@ class JournalController {
     try {
       upload.single("file")(req, res, async (err) => {
         const journal_id = req.params.id;
-        const existingJournal = await this.journal.findByInd(journal_id);
+        const existingJournal = await this.journal.findById(journal_id);
 
         if (!existingJournal) {
           return res.status(StatusCodes.NOT_FOUND).json({

@@ -28,6 +28,19 @@ class User {
       throw error;
     }
   };
+
+  findById = async ({ id }) => {
+    try {
+      let query = `
+        SELECT * FROM Users WHERE user_id = "${id}";
+      `
+      const data = await Query(query);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 }
 
 export default User;
