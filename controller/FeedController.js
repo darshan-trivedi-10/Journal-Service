@@ -9,7 +9,16 @@ class FeedController {
 
   StudentFeed = async (req, res) => {
     try {
+      console.log("Heyy");
       const studentId = req.params.id;
+      console.log(studentId, req.user_id);
+      if (studentId != req.user_id) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          message: "You do not have permission to access this data",
+          data: {},
+          success: false,
+        });
+      }
       const data = await this.journalStudentTag.studentFeed(studentId);
       res.status(StatusCodes.OK).json({
         success: true,
@@ -30,6 +39,13 @@ class FeedController {
   TeacherFeed = async (req, res) => {
     try {
       const teacherId = req.params.id;
+      if (teacherId != req.user_id) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          message: "You do not have permission to access this data",
+          data: {},
+          success: false,
+        });
+      }
       const data = await this.journal.teacherFeed(teacherId);
       res.status(StatusCodes.OK).json({
         success: true,

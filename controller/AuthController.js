@@ -58,7 +58,6 @@ class AuthController {
   };
 
   sendTokenResponse = (res, user, message) => {
-    console.log("user-token ", user);
     const token = createToken(user);
     return res.status(StatusCodes.OK).json({
       success: true,

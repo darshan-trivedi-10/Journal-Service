@@ -71,7 +71,6 @@ class JournalController {
           journal_id,
           taggedStudent
         );
-        
 
         return res.status(StatusCodes.OK).json({
           message: "Journal Created Successfully",
@@ -93,6 +92,16 @@ class JournalController {
   update = async (req, res) => {
     try {
       upload.single("file")(req, res, async (err) => {
+        if (err) {
+          console.log("Error in uploading Journal files - Controller");
+          console.log(err);
+          return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Error in uploading Attachments",
+            data: {},
+            success: false,
+            error: err.message,
+          });
+        }
         const journal_id = req.params.id;
         const existingJournal = await this.journal.findById(journal_id);
 
