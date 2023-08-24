@@ -24,6 +24,23 @@ class Attachment {
       throw error;
     }
   };
+
+  update = async(attachment_id, attachment_data, attachment_type) => {
+    try {
+      const query = `
+        UPDATE Attachments 
+        SET attachment_data = "${attachment_data}", attachment_type = "${attachment_type}" 
+        WHERE attachment_id = "${attachment_id}";
+      `;
+      console.log(query);
+      const data = await Query(query);
+      return data.affectedRows > 0;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
 }
 
 export default Attachment;

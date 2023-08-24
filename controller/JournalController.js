@@ -77,55 +77,69 @@ class JournalController {
   update = async (req, res) => {
     try {
       upload.single("file")(req, res, async (err) => {
+        const journal_id = req.params.id;
+        const existingJournal = await this.journal.findByInd(journal_id);
 
-        
-      });
+        if (!existingJournal) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            message: "Journal not Found",
+            data: {},
+            success: false,
+          });
+        }
 
-      const journal_id = req.params.id;
-      const existingJournal = await this.journal.findByInd(journal_id);
+        if (existingJournal[0].user_id !== req.user_id) {
+          return res.status(StatusCodes.FORBIDDEN).json({
+            message: "You do not have permission to update this journal",
+            data: {},
+            success: false,
+          });
+        }
 
-      if (!existingJournal) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          message: "Journal not Found",
-          data: {},
-          success: false,
+        let updatedJournalData = {};
+        if (req.body.description) {
+          updatedJournalData.description = req.body.description;
+        }
+
+        if (req.body.published_at) {
+          updatedJournalData.published_at = req.body.published_at;
+        }
+
+        if (req.body.taggedStudent) {
+          await this.journalStudentTag.updateTaggedStudents(
+            journal_id,
+            req.body.taggedStudent
+          );
+        }
+
+        if (req.body.type) {
+          let type = req.body.type;
+          let attachment_data;
+          if (type == "url") {
+            attachment_data = req.body.url;
+          } else if (type == "file") {
+            attachment_data = req.file.filename;
+          }
+          if (attachment_data) {
+            const updateAttachment = await this.attachment.update(
+              existingJournal[0].attachment_id,
+              attachment_data,
+              type
+            );
+          }
+        }
+
+        if (Object.keys(updatedJournalData).length != 0) {
+          const updatedJournal = await this.journal.update(
+            journal_id,
+            updatedJournalData
+          );
+        }
+
+        return res.status(StatusCodes.OK).json({
+          message: "Journal updated Successfully",
+          success: true,
         });
-      }
-
-      if (existingJournal[0].user_id !== req.user_id) {
-        return res.status(StatusCodes.FORBIDDEN).json({
-          message: "You do not have permission to update this journal",
-          data: {},
-          success: false,
-        });
-      }
-
-      let updatedJournalData = {};
-      if (req.body.description) {
-        updatedJournalData.description = req.body.description;
-      }
-
-      if (req.body.published_at) {
-        updatedJournalData.published_at = req.body.published_at;
-      }
-
-      if (req.body.taggedStudent) {
-        await this.journalStudentTag.updateTaggedStudents(
-          journal_id,
-          req.body.taggedStudent
-        );
-      }
-
-      if (Object.keys(updatedJournalData).length != 0) {
-        const updatedJournal = await this.journal.update(
-          journal_id,
-          updatedJournalData
-        );
-      }
-
-      return res.status(StatusCodes.OK).json({
-        message: "Journal updated Successfully",
-        success: true,
       });
     } catch (error) {
       console.error("Error in Journal Controller:", error.message);
