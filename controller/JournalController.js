@@ -11,10 +11,6 @@ class JournalController {
     this.journalStudentTag = new JournalStudentTag();
   }
 
-  print = async () => {
-    console.log(this.journal);
-  };
-
   create = async (req, res) => {
     try {
       upload.single("file")(req, res, async (err) => {
@@ -28,7 +24,6 @@ class JournalController {
             error: err.message,
           });
         }
-        console.log("IDDD - ", req.user_id);
 
         let attachment_data,
           attachment_type = req.body.type;
@@ -44,7 +39,6 @@ class JournalController {
           attachment_type,
           attachment_data
         );
-        console.log(response);
 
         let journal_id = uuidv4();
         const journalData = {
@@ -80,12 +74,75 @@ class JournalController {
     }
   };
 
-  update = async (req, res) => {};
+  update = async (req, res) => {
+    try {
+      upload.single("file")(req, res, async (err) => {
+
+        
+      });
+
+      const journal_id = req.params.id;
+      const existingJournal = await this.journal.findByInd(journal_id);
+
+      if (!existingJournal) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "Journal not Found",
+          data: {},
+          success: false,
+        });
+      }
+
+      if (existingJournal[0].user_id !== req.user_id) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          message: "You do not have permission to update this journal",
+          data: {},
+          success: false,
+        });
+      }
+
+      let updatedJournalData = {};
+      if (req.body.description) {
+        updatedJournalData.description = req.body.description;
+      }
+
+      if (req.body.published_at) {
+        updatedJournalData.published_at = req.body.published_at;
+      }
+
+      if (req.body.taggedStudent) {
+        await this.journalStudentTag.updateTaggedStudents(
+          journal_id,
+          req.body.taggedStudent
+        );
+      }
+
+      if (Object.keys(updatedJournalData).length != 0) {
+        const updatedJournal = await this.journal.update(
+          journal_id,
+          updatedJournalData
+        );
+      }
+
+      return res.status(StatusCodes.OK).json({
+        message: "Journal updated Successfully",
+        success: true,
+      });
+    } catch (error) {
+      console.error("Error in Journal Controller:", error.message);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        data: {},
+        success: false,
+        err: error,
+      });
+    }
+  };
 
   delete = async (req, res) => {
     try {
-      const journal_id = req.body.id,user_id = req.user_id;
-      
+      const journal_id = req.body.id,
+        user_id = req.user_id;
+
       const deleteJournal = await this.journal.delete(journal_id, user_id);
 
       if (deleteJournal == true) {

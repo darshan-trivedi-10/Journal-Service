@@ -23,6 +23,19 @@ class JournalStudentTag {
       throw error;
     }
   };
+
+  updateTaggedStudents = async (journal_id, students) => {
+    try {
+      let query = `
+      DELETE FROM JournalStudentTag WHERE journal_id = "${journal_id}"
+      `;
+      const data = Query(query);
+      return await this.create(journal_id, students);
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  };
 }
 
 export default JournalStudentTag;
