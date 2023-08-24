@@ -13,7 +13,7 @@ const feedController = new FeedController();
 var validator = new Validator();
 
 // Auth Routes
-router.get("/auth", validator.authValidator, authController.Auth);
+router.post("/auth", validator.authValidator, authController.Auth);
 
 // Journal Routes
 router.post("/journal/create", authMiddleware, journalController.create);
