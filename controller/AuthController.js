@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
 
 import { User } from "../model/index.js";
 import { verifyPassword, createToken } from "../utills/authUtills.js";
@@ -17,15 +18,19 @@ class AuthController {
       if (!existingUser) {
         const salt = await bcrypt.genSalt(10);
         const newPassword = await bcrypt.hash(password, salt);
+        const user_id = uuidv4();
         const newUser = await this.user.create({
           username,
+          user_id: user_id,
           password: newPassword,
           role,
         });
 
         return this.sendTokenResponse(
           res,
-          newUser,
+          {
+            user_id: user_id,
+          },
           "You are successfully registered and logged in"
         );
       }
@@ -53,6 +58,7 @@ class AuthController {
   };
 
   sendTokenResponse = (res, user, message) => {
+    console.log("user-token ", user);
     const token = createToken(user);
     return res.status(StatusCodes.OK).json({
       success: true,

@@ -13,6 +13,7 @@ const verifyPassword = (userPassword, encryptedPassword) => {
 
 const createToken = (user) => {
     try {
+        console.log("user ", user);
         const result = jwt.sign({
             id: user.user_id
         }, JWT_SCREATE_KEY, { expiresIn: '1d' });

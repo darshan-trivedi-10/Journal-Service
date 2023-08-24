@@ -5,8 +5,8 @@ class User {
     try {
       // { username: 'dbt10', password: 1235678, role: 1 }
       let query = `
-            INSERT INTO Users (username, password, role)
-            VALUES ("${user.username}", "${user.password}", ${user.role});
+            INSERT INTO Users (user_id, username, password, role)
+            VALUES ( "${user.user_id}" ,"${user.username}", "${user.password}", '${user.role}');
       `;
       const data = await Query(query);
       return data.affectedRows > 0;
